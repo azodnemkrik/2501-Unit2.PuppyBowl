@@ -1,10 +1,11 @@
 //If you would like to, you can create a variable to store the API_URL here.
 //This is optional. if you do not want to, skip this and move on.
+const API_URL = "https://fsa-puppy-bowl.herokuapp.com/api/2501-ftb-et-web-am-PUPPIES/players"
 
 
 /////////////////////////////
 /*This looks like a good place to declare any state or global variables you might need*/
-
+let puppies = []
 ////////////////////////////
 
 
@@ -16,8 +17,18 @@
  */
 const fetchAllPlayers = async () => {
   //TODO
+  try {
+    const response = await fetch(API_URL)
+    const data = await response.json()
+    console.log(data.data.players)
+    puppies = data.data.players
+    
+  } catch (error) {
+    console.error(error)
+  }
 
 };
+fetchAllPlayers()
 
 /**
  * Fetches a single player from the API.

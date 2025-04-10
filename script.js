@@ -6,6 +6,7 @@ const API_URL = "https://fsa-puppy-bowl.herokuapp.com/api/2501-ftb-et-web-am-PUP
 /////////////////////////////
 /*This looks like a good place to declare any state or global variables you might need*/
 let puppies = []
+const puppiesListDiv = document.querySelector("#puppiesList")
 ////////////////////////////
 
 
@@ -22,7 +23,7 @@ const fetchAllPlayers = async () => {
     const data = await response.json()
     console.log(data.data.players)
     puppies = data.data.players
-    
+    render()
   } catch (error) {
     console.error(error)
   }
@@ -102,6 +103,14 @@ const removePlayer = async (playerId) => {
  */
 const render = () => {
   // TODO
+  const html = puppies.map((puppy) => {
+    return `
+      <div>
+        <h3>${puppy.name} - ${puppy.breed}</h3>
+      </div>
+    `
+  })
+  puppiesListDiv.innerHTML = html.join("")
 
   
 };

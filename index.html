@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="./script.js" defer></script>
-    <title>PuppyBowl</title>
-  </head>
-  <body>
-    <h1>Welcome to Puppy Bowl!</h1>
-    <!--Don't be afraid to add stuff to your HTML as needed!-->
-    <hr/>
-    <div id="puppiesList">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="./script.js" defer></script>
+  <title>PuppyBowl</title>
+</head>
+
+<body>
+  <h1>Welcome to Puppy Bowl!</h1>
+  <!--Don't be afraid to add stuff to your HTML as needed!-->
+  <hr />
+  <form id="addPuppyForm">
+    <h4>Add a new Puppy</h4>
+    <div>
+      <label>Name:</label>
+      <input type="text" name="name" required />
     </div>
-  </body>
+    <div>
+      <label>Breed:</label>
+      <input type="text" name="breed" required />
+    </div>
+    <div>
+      <h4>Select Status</h4>
+      <input type="radio" id="bench" name="status" value="bench" checked/>
+      <label for="bench">Bench</label>
+      <input type="radio" id="field" name="status" value="field" />
+      <label for="field">Field</label>
+    </div>
+    <div>
+    <label>Image URL:</label>
+      <input type="url" name="imageUrl" />
+    </div>
+    <div>
+      <label>Team ID</label>
+      <input type="text" name="teamId" />
+    </div>
+    
+    <button type="submit">Submit</button>
+  </form>
+  <div id="puppiesList">
+
+  </div>
+</body>
+
 </html>

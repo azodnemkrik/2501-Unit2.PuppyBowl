@@ -1,150 +1,180 @@
-//If you would like to, you can create a variable to store the API_URL here.
-//This is optional. if you do not want to, skip this and move on.
+// API URL
 const API_URL = "https://fsa-puppy-bowl.herokuapp.com/api/2501-ftb-et-web-am-PUPPIES/players"
 
 
-/////////////////////////////
-/*This looks like a good place to declare any state or global variables you might need*/
+// Global variables
 let puppies = []
 const puppiesListDiv = document.querySelector("#puppiesList")
-////////////////////////////
+const addPuppyForm = document.querySelector("#addPuppyForm")
+
+window.addEventListener("hashchange", (event) => {
+  render()
+})
 
 
 
-/**
- * Fetches all players from the API.
- * This function should not be doing any rendering
- * @returns {Object[]} the array of player objects
- */
+
+//  Fetches all players from the API.
 const fetchAllPlayers = async () => {
   //TODO
   try {
-    const response = await fetch(API_URL)
+    const response = await fetch("https://fsa-puppy-bowl.herokuapp.com/api/2501-ftb-et-web-am-PUPPIES/players")
     const data = await response.json()
-    console.log(data.data.players)
+    console.log(data)
     puppies = data.data.players
+    console.log(puppies)
     render()
   } catch (error) {
     console.error(error)
   }
 
 };
+
 fetchAllPlayers()
 
-/**
- * Fetches a single player from the API.
- * This function should not be doing any rendering
- * @param {number} playerId
- * @returns {Object} the player object
- */
+
+
+
+// Fetches a single player from the API.
 const fetchSinglePlayer = async (playerId) => {
   //TODO
 };
 
-/**
- * Adds a new player to the roster via the API.
- * Once a player is added to the database, the new player
- * should appear in the all players page without having to refresh
- * @param {Object} newPlayer the player to add
- */
-/* Note: we need data from our user to be able to add a new player
- * Do we have a way to do that currently...? 
-*/
-/**
- * Note#2: addNewPlayer() expects you to pass in a
- * new player object when you call it. How can we
- * create a new player object and then pass it to addNewPlayer()?
- */
-/**
- * FOR TESTING PURPOSES ONLY PLEASE OBSERVE THIS SECTION
- * @returns {Object} the new player object added to database
- */
 
+
+
+// Adds a new player to the roster via the API.
 const addNewPlayer = async (newPlayer) => {
   //TODO
+  
+  newPlayer.preventDefault()
+  // console.log(newPlayer.target.name.value)
+
+  const newPuppy = {
+    name: newPlayer.target.name.value,
+    breed: newPlayer.target.breed.value,
+    status: newPlayer.target.status.value,
+    imageUrl: newPlayer.target.imageUrl.value,
+    teamId: newPlayer.target.imageUrl.value*1,
+  }
+  console.log("newPuppy", newPuppy)
+
+  try {
+    const response = await fetch(`https://fsa-puppy-bowl.herokuapp.com/api/2501-ftb-et-web-am-PUPPIES/players`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newPuppy)
+    })
+    const data = await response.json()
+    console.log("data", data)
+    puppies.push(data.data.newPlayer)
+    console.log("new puppies:", puppies)
+    render()
+  } catch (error) {
+    console.error(error)
+  }
 };
 
-/**
- * Removes a player from the roster via the API.
- * Once the player is removed from the database,
- * the player should also be removed from our view without refreshing
- * @param {number} playerId the ID of the player to remove
- */
-/**
- * Note: In order to call removePlayer() some information is required.
- * Unless we get that information, we cannot call removePlayer()....
- */
-/**
- * Note#2: Don't be afraid to add parameters to this function if you need to!
- */
+addPuppyForm.addEventListener("submit", addNewPlayer)
 
+// addPuppyForm.addEventListener("submit", async (newPlayer) => {
+//   console.log("Line 83")
+//   console.log("newPlayer", newPlayer)
+//   newPlayer.preventDefault()
+
+//   const newPuppy = {
+//     name: newPlayer.target.name.value,
+//     breed: newPlayer.target.breed.value,
+//     status: newPlayer.target.status.value,
+//     imageUrl: newPlayer.target.imageUrl.value,
+//     teamId: newPlayer.target.imageUrl.value*1,
+//   }
+//   console.log("newPuppy", newPuppy)
+
+//   try {
+//     const response = await fetch(`https://fsa-puppy-bowl.herokuapp.com/api/2501-ftb-et-web-am-PUPPIES/players`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify(newPuppy)
+//     })
+//     const data = await response.json()
+//     console.log("data", data)
+//     puppies.push(data.data.newPlayer)
+//     console.log("new puppies:", puppies)
+//     render()
+//   } catch (error) {
+//     console.error(error)
+//   }
+// })
+
+
+
+
+// Removes a player from the roster via the API.
 const removePlayer = async (playerId) => {
   //TODO
 
 };
 
-/**
- * Updates html to display a list of all players or a single player page.
- *
- * If there are no players, a corresponding message is displayed instead.
- *
- * Each player in the all player list is displayed with the following information:
- * - name
- * - id
- * - image (with alt text of the player's name)
- *
- * Additionally, for each player we should be able to:
- * - See details of a single player. When clicked, should be redirected
- *    to a page with the appropriate hashroute. The page should show
- *    specific details about the player clicked 
- * - Remove from roster. when clicked, should remove the player
- *    from the database and our current view without having to refresh
- *
- */
+
+
+
+// Updates html to display a list of all players or a single player page.
 const render = () => {
   // TODO
   const html = puppies.map((puppy) => {
     return `
-      <div>
-        <h3>${puppy.name} - ${puppy.breed}</h3>
-      </div>
+      <a href=#${puppy.name}>
+        <div class="puppyCard">
+          <h3>${puppy.name}</h3>
+        </div>
+      </a>
     `
+    // <img src="${puppy.imageUrl}" />
   })
+ 
+  const name = window.location.hash.slice(1)
+  console.log(name)
+  
   puppiesListDiv.innerHTML = html.join("")
 
-  
 };
 
-/**
- * Updates html to display a single player.
- * A detailed page about the player is displayed with the following information:
- * - name
- * - id
- * - breed
- * - image (with alt text of the player's name)
- * - team name, if the player has one, or "Unassigned"
- *
- * The page also contains a "Back to all players" that, when clicked,
- * will redirect to the approriate hashroute to show all players.
- * The detailed page of the single player should no longer be shown.
- * @param {Object} player an object representing a single player
- */
+
+
+
+// Updates html to display a single player.
 const renderSinglePlayer = (player) => {
   // TODO
 
 };
 
 
-/**
- * Initializes the app by calling render
- * HOWEVER....
- */
+
+
+// Initializes the app by calling render
 const init = async () => {
   //Before we render, what do we always need...?
 
   render();
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**THERE IS NO NEED TO EDIT THE CODE BELOW =) **/
 

@@ -103,6 +103,7 @@ const removePlayer = async (playerId) => {
 // Updates html to display a list of all players or a single player page.
 const render = () => {
   // TODO
+
   const html = puppies.map((puppy) => {
     return `
       <a href=#${puppy.name}>
@@ -113,17 +114,55 @@ const render = () => {
       </a>
     `
   })
- 
+
   const name = window.location.hash.slice(1)
-  console.log(name)
-  
-  puppiesListDiv.innerHTML = html.join("")
+  // console.log(name)
 
   const singlePlayer = puppies.find((player) => {
     return player.name === name
   })
 
-  // console.log(singlePlayer)
+  if (singlePlayer) {
+    // return 
+    console.log(`Show Single Player:`, singlePlayer.name)
+  } else {
+    console.log("Show Main Menu")
+  }
+
+  
+  puppiesListDiv.innerHTML = singlePlayer ? renderSinglePlayer(singlePlayer) :  `
+  <form id="addPuppyForm">
+    <h4>Add a new Puppy</h4>
+    <div>
+      <label>Name:</label>
+      <input type="text" name="name" required />
+    </div>
+    <div>
+      <label>Breed:</label>
+      <input type="text" name="breed" required />
+    </div>
+    <div>
+      <h4>Select Status</h4>
+      <input type="radio" id="bench" name="status" value="bench" checked/>
+      <label for="bench">Bench</label>
+      <input type="radio" id="field" name="status" value="field" />
+      <label for="field">Field</label>
+    </div>
+    <div>
+    <label>Image URL:</label>
+      <input type="url" name="imageUrl" />
+    </div>
+    <div>
+      <label>Team ID</label>
+      <input type="text" name="teamId" />
+    </div>
+    <button type="submit">Submit</button>
+  </form> 
+  <br />
+  <br />
+  ${html.join("")}  
+  `
+
 
 };
 
@@ -133,9 +172,29 @@ const render = () => {
 // Updates html to display a single player.
 const renderSinglePlayer = (player) => {
   // TODO
+  console.log(player)
+  const html = `
+  <div class="singlePlayer">
+    <img src=${player.imageUrl} />
+    <h2>Name: ${player.name} </h2>
+    <h2>Breed: ${player.breed} </h2>
+    <h2>Status: ${player.status} </h2>
+    <h2>TeamId: ${player.teamId} </h2>
+    <a href=#>Back to all Players</a>
+    <button class="deleteButton" name=${player.playerId}>Delete This Player</button>
+  </div>
+  `
+  return html
 
 };
+/*
 
+    addPuppyForm.name.value = ""
+    addPuppyForm.breed.value = ""
+    addPuppyForm.status.value = ""
+    addPuppyForm.imageUrl.value = ""
+    addPuppyForm.teamId.value = ""
+*/ 
 
 
 

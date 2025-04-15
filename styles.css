@@ -98,6 +98,7 @@ a {
 
 .deleteButton {
   background-color: #fe6f6f;
+  margin-bottom: 10px;
 }
 
 .deleteButton:hover {
@@ -164,6 +165,11 @@ header > img {
 
 .layoutColumn > p {
   font-size: 2em;
+}
+
+.layoutRow{
+  display: flex;
+  gap: 5px;
 }
 
 .formContainer {

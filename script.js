@@ -122,6 +122,7 @@ const removePlayer = async (player) => {
       console.error(error)
     }
     
+	
     render()
   }
 };

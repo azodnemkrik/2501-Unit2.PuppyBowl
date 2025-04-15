@@ -17,7 +17,17 @@ const fetchAllPlayers = async () => {
     const response = await fetch(API_URL)
     const data = await response.json()
     puppies = data.data.players
-    console.log(puppies)
+	for(let i=0; i < puppies.length; i++){
+		const dog = puppies[i]
+		const dogName = dog.name
+		// console.log(puppies[i].name)
+		if(dogName.indexOf(" ")>=0){
+			const newDogName = dogName.replace(/\s+/g, '-')
+			// console.log("newDogName:", newDogName)
+			dog.name = newDogName
+		}
+	}
+    // console.log(puppies)
     render()
   } catch (error) {
     console.error(error)
@@ -36,16 +46,16 @@ const addNewPlayer = async (newPlayer) => {
   //TODO
   
   newPlayer.preventDefault()
-  console.log(newPlayer.target.name.value)
+//   console.log(newPlayer.target.name.value)
 
   const newPuppy = {
-    name: newPlayer.target.name.value,
+    name: newPlayer.target.name.value.replace(/\s+/g, '-'),
     breed: newPlayer.target.breed.value,
     status: newPlayer.target.status.value,
     imageUrl: newPlayer.target.imageUrl.value,
     teamId: newPlayer.target.imageUrl.value*1,
   }
-  console.log("newPuppy", newPuppy)
+//   console.log("newPuppy", newPuppy)
 
   try {
     const response = await fetch(API_URL , {
@@ -57,15 +67,11 @@ const addNewPlayer = async (newPlayer) => {
     })
     const data = await response.json()
     puppies.push(data.data.newPlayer)
-    console.log("data", data)
-    console.log("new puppies:", puppies)
+    // console.log("data", data)
+    // console.log("new puppies:", puppies)
 
     // Clear form
-    addPuppyForm.name.value = ""
-    addPuppyForm.breed.value = ""
-    addPuppyForm.status.value = ""
-    addPuppyForm.imageUrl.value = ""
-    addPuppyForm.teamId.value = ""
+    clearForm()
 
     // Render
     render()
@@ -82,16 +88,16 @@ const removePlayer = async (player) => {
   if(player.target.classList.contains("deleteButton")){
     const playerId = player.target.id*1
     const playerName = player.target.name
-    console.log("player", player)
-    console.log("playerId", playerId)
-    console.log("playerName", playerName)
+    // console.log("player", player)
+    // console.log("playerId", playerId)
+    // console.log("playerName", playerName)
     for(let i=0; i < puppies.length ; i++) {
       console.log("puppies[i]", puppies[i].name, playerName)
       if(puppies[i].name === playerName) {
-        console.log("match")
+        // console.log("match")
         puppies.splice(i,1)
       } else {
-        console.log("no match")
+        // console.log("no match")
       }
     }
 
@@ -99,7 +105,7 @@ const removePlayer = async (player) => {
       const response = await fetch(API_URL+`/${playerId}`, {
         method: "DELETE"
       })
-      console.log("response", response)
+    //   console.log("response", response)
       player.target.parentElement.remove()
       // render()
     } catch (error) {
@@ -113,21 +119,38 @@ const removePlayer = async (player) => {
 puppiesListDiv.addEventListener('click', removePlayer)
 
 
+const clearForm = () => {
+    addPuppyForm.name.value = ""
+    addPuppyForm.breed.value = ""
+    addPuppyForm.status.value = ""
+    addPuppyForm.imageUrl.value = ""
+    addPuppyForm.teamId.value = ""
+  }
+
+
 
 const renderSinglePlayer = (player) => {
   const html = `
-  <div class="singlePlayer">
-    <img src=${player.imageUrl} />
-    <h2>Name: ${player.name} </h2>
-    <h2>Breed: ${player.breed} </h2>
-    <h2>Status: ${player.status} </h2>
-    <h2>TeamId: ${player.teamId} </h2>
-    <br/>
-    <a href=#>Back to all Players</a>
-    <br/>
-    <a href=# class="deleteButton" id=${player.id} name=${player.name}>Delete This Player</a>
-  </div>
-  `
+	<div class="singlePlayer two-column-layout">
+		<div class="layoutColumn">
+			<img src=${player.imageUrl} />
+		</div>
+		<div class="layoutColumn">
+			<h2 class="luckiestGuyFont">Name:</h2>
+			<p>${player.name}</p> 
+			<h2 class="luckiestGuyFont">Breed:</h2>
+			<p>${player.breed}</p> 
+			<h2 class="luckiestGuyFont">Status:</h2>
+			<p>${player.status}</p> 
+			<h2 class="luckiestGuyFont">TeamId:</h2>
+			<p>${player.teamId}</p> 
+			<br/>
+			<a href=# class="backButton domButton">Back to all Players</a>
+			<br/>
+			<a href=# class="deleteButton domButton" id=${player.id} name=${player.name}>Delete This Player</a>
+		</div>
+	</div>
+  `;
   return html
 }
 
@@ -153,6 +176,15 @@ const render = () => {
   const singlePlayer = puppies.find((player) => {
     return player.name === pageName
   })
+
+  const form = document.querySelector(".formContainer")
+  if(singlePlayer) {
+    console.log("Show Single Player")
+    form.style.display = "none"
+  } else {
+    console.log("Show Team Roster")
+    form.style.display = "block"
+  }
 
   puppiesListDiv.innerHTML = singlePlayer ? renderSinglePlayer(singlePlayer) : `${allPlayerHTML.join("")}`
 

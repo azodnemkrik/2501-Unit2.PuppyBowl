@@ -37,14 +37,24 @@ const fetchAllPlayers = async () => {
 
 // Fetches a single player from the API.
 const fetchSinglePlayer = async (playerId) => {
-  //TODO
+	try {
+		const response = await fetch(API_URL+`/${playerId}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json"
+			  },
+			  body: JSON.stringify(newPuppy)
+		  })
+		const data = await response.json()
+		return data
+	} catch (error) {
+		console.error(error)
+	}
 };
 
 
 // Adds a new player to the roster via the API.
 const addNewPlayer = async (newPlayer) => {
-  //TODO
-  
   newPlayer.preventDefault()
 //   console.log(newPlayer.target.name.value)
 
@@ -130,7 +140,10 @@ const clearForm = () => {
 
 
 const renderSinglePlayer = (player) => {
-  const html = `
+	const checkTeam = player.teamId*1
+	console.log("checkTeam:", checkTeam)
+
+	const html = `
 	<div class="singlePlayer two-column-layout">
 		<div class="layoutColumn">
 			<img src=${player.imageUrl} />
@@ -143,7 +156,7 @@ const renderSinglePlayer = (player) => {
 			<h2 class="luckiestGuyFont">Status:</h2>
 			<p>${player.status}</p> 
 			<h2 class="luckiestGuyFont">TeamId:</h2>
-			<p>${player.teamId}</p> 
+			<p>${checkTeam <= 0 ? "Unassigned" : checkTeam }</p> 
 			<br/>
 			<a href=# class="backButton domButton">Back to all Players</a>
 			<br/>
@@ -151,7 +164,7 @@ const renderSinglePlayer = (player) => {
 		</div>
 	</div>
   `;
-  return html
+  return html;
 }
 
 // Updates html to display a list of all players OR a single player page.

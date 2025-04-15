@@ -126,8 +126,19 @@ const removePlayer = async (player) => {
   }
 };
 
-puppiesListDiv.addEventListener('click', removePlayer)
-
+// puppiesListDiv.addEventListener('click', removePlayer)
+const checkRemove = (event) => {
+	console.log("!!", event)
+	console.log("Are you sure?")
+	// if(event.target.classList.contains("deleteButton")){
+	if (confirm("Are you sure?")) {
+		console.log("You pressed OK!")
+		removePlayer(event)
+	} else {
+		console.log("You pressed Cancel!")
+		// }
+	}
+}
 
 const clearForm = () => {
     addPuppyForm.name.value = ""
@@ -135,6 +146,7 @@ const clearForm = () => {
     addPuppyForm.status.value = ""
     addPuppyForm.imageUrl.value = ""
     addPuppyForm.teamId.value = ""
+	document.querySelector("#bench").checked = true
   }
 
 
@@ -160,7 +172,7 @@ const renderSinglePlayer = (player) => {
 			<br/>
 			<a href=# class="backButton domButton">Back to all Players</a>
 			<br/>
-			<a href=# class="deleteButton domButton" id=${player.id} name=${player.name}>Delete This Player</a>
+			<a class="deleteButton domButton" onclick="checkRemove(event)" id=${player.id} name=${player.name}>Delete This Player</a>
 		</div>
 	</div>
   `;
@@ -182,24 +194,28 @@ const render = () => {
     `
   })
 
-  const pageName = window.location.hash.slice(1)
-  console.log("render:", pageName)
+  const pageName = window.location.hash.slice(1);
+  console.log("render:", pageName);
 
-  // Single Player Result (name || undefined) 
+  // Single Player Result (name || undefined)
   const singlePlayer = puppies.find((player) => {
-    return player.name === pageName
-  })
+    return player.name === pageName;
+  });
 
-  const form = document.querySelector(".formContainer")
-  if(singlePlayer) {
-    console.log("Show Single Player")
-    form.style.display = "none"
+  const form = document.querySelector(".formContainer");
+
+  puppiesListDiv.innerHTML = singlePlayer ? renderSinglePlayer(singlePlayer) : `${allPlayerHTML.join("")}`;
+ 
+  if (singlePlayer) {
+    console.log("Show Single Player");
+    form.style.display = "none";
+	gsap.from(".singlePlayer" , .35 , { scale: 0 , ease: Back.easeOut , boxShadow: "0px 0px 0px 0px rgba(0, 0, 0, 0)" })
   } else {
-    console.log("Show Team Roster")
-    form.style.display = "block"
+    console.log("Show Team Roster");
+    form.style.display = "block";
+	gsap.from(".puppyCard" , .35 , { scale: 0 , y: 300 , ease: Back.easeOut , boxShadow: "0px 0px 0px 0px rgba(0, 0, 0, 0)" , stagger: .05 })
   }
 
-  puppiesListDiv.innerHTML = singlePlayer ? renderSinglePlayer(singlePlayer) : `${allPlayerHTML.join("")}`
 
 }
 
